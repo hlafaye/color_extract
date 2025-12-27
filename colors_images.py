@@ -24,14 +24,9 @@ def palette_make(image_path, nb_colors:int):
         b = int(b * 255)
         return f'#{r:02x}{g:02x}{b:02x}'
 
-
-
     img = Image.open(image_path).convert("RGB")
     pixels = np.array(img)
-
-
-    resized_image = resize(pixels, (1920, 1080), anti_aliasing=True)
-
+    resized_image = resize(pixels, (320, 320), anti_aliasing=True)
 
     array_2d = resized_image.reshape(-1, 3)
     kmeans = KMeans(n_clusters=nb_colors, random_state=0, n_init="auto").fit(array_2d)
@@ -49,7 +44,6 @@ def palette_make(image_path, nb_colors:int):
             "hex": rgb_to_hex(color),
             "count": int(count)
         })
-
     return colors_palette
 
 
@@ -66,6 +60,7 @@ def index():
             nb_colors = 5
         nb_colors = max(2, min(nb_colors, 12))
         encoded_bytes = base64.b64encode(image_data.read())
+        image_data.seek(0)  
         image_preview = encoded_bytes.decode("utf-8")
 
         palette=palette_make(image_path=image_data, nb_colors=nb_colors)
