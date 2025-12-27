@@ -14,8 +14,18 @@
 </head>
 
 <body>
-    <div class="col-lg-6 mx-auto">
-        <h1 class="lead mb-4">Extract colors from a picture.</h1>
+    <div class="container d-flex justify-content-center">
+        <div class="col-lg-8 col-xl-7 text-center mt-5 pt-5">
+      
+            <h1 class="display-8 fw-semibold mb-4">
+                Extract colors from a picture.
+            </h1>
+            <p class="text-white-50 fs-5 mb-4">
+                Upload an image and instantly extract a clean color palette.
+            </p>
+              
+              
+        
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
             <form id="upload-form" action="{{ url_for('index') }}" method="post" enctype="multipart/form-data">
             
@@ -33,7 +43,7 @@
                 
                     <div class="toolbar__sep"></div>
                 
-                    <label for="nb-colors" class="toolbar__label">Couleurs</label>
+                    <label for="nb-colors" class="toolbar__label">Colors</label>
                     <input id="nb-colors" name="nb_colors" type="number" min="2" max="12" value="5"
                         class="form-control form-control-lg toolbar__input" />
                 </div>

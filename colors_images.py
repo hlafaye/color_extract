@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static", static_url_path="/static")
 Bootstrap5(app)
 app.config['SECRET_KEY'] = os.environ.get('APP_KEY')
 
@@ -74,5 +74,5 @@ def index():
     return render_template('colors_images.html')
 
 
-if __name__=="__main__":
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
