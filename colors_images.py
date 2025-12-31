@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import Image
 from skimage.transform import resize
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, MiniBatchKMeans
 from flask import Flask, render_template, redirect, url_for, flash, request, session, send_file
 from  flask_bootstrap import Bootstrap5
 import base64
@@ -18,35 +18,31 @@ app.config['SECRET_KEY'] = os.environ.get('APP_KEY')
 
 def palette_make(image_path, nb_colors:int):
 
-    def rgb_to_hex(rgb):
-        r, g, b = rgb
-        r = int(r * 255)
-        g = int(g * 255)
-        b = int(b * 255)
+    def rgb_to_hex(rgb255):
+        r, g, b = rgb255
+        r = int(np.clip(r, 0, 255))
+        g = int(np.clip(g, 0, 255))
+        b = int(np.clip(b, 0, 255))
         return f'#{r:02x}{g:02x}{b:02x}'
 
     img = Image.open(image_path).convert("RGB")
     img.thumbnail((320, 320))
-    pixels = np.asarray(img).reshape(-1, 3).astype(np.float32)
-    resized_image = resize(pixels, (320, 320), anti_aliasing=True)
+    pixels = np.asarray(img, dtype=np.uint8).reshape(-1, 3)
 
-    array_2d = resized_image.reshape(-1, 3)
-    kmeans = KMeans(n_clusters=nb_colors, random_state=0, n_init="auto").fit(array_2d)
-    colors = kmeans.cluster_centers_
 
-    labels = kmeans.labels_
+    kmeans = MiniBatchKMeans(
+            n_clusters=nb_colors,
+            random_state=0,
+            batch_size=2048,
+            n_init="auto"
+    )
+    labels = kmeans.fit_predict(pixels)
+    centers = kmeans.cluster_centers_
     counts = np.bincount(labels)
 
-    palette = sorted(zip(colors, counts),key=lambda x: x[1],reverse=True)
+    palette = sorted(zip(centers, counts), key=lambda x: x[1], reverse=True)
 
-    colors_palette = []
-
-    for color, count in palette:
-        colors_palette.append({
-            "hex": rgb_to_hex(color),
-            "count": int(count)
-        })
-    return colors_palette
+    return [{"hex": rgb_to_hex(c), "count": int(n)} for c, n in palette]
 
 
 
