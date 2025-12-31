@@ -7,6 +7,7 @@ from  flask_bootstrap import Bootstrap5
 import base64
 import os 
 from dotenv import load_dotenv
+from io import BytesIO
 
 load_dotenv()
 
@@ -25,7 +26,8 @@ def palette_make(image_path, nb_colors:int):
         return f'#{r:02x}{g:02x}{b:02x}'
 
     img = Image.open(image_path).convert("RGB")
-    pixels = np.array(img)
+    img.thumbnail((320, 320))
+    pixels = np.asarray(img).reshape(-1, 3).astype(np.float32)
     resized_image = resize(pixels, (320, 320), anti_aliasing=True)
 
     array_2d = resized_image.reshape(-1, 3)
@@ -59,11 +61,14 @@ def index():
         except ValueError:
             nb_colors = 5
         nb_colors = max(2, min(nb_colors, 12))
-        encoded_bytes = base64.b64encode(image_data.read())
-        image_data.seek(0)  
-        image_preview = encoded_bytes.decode("utf-8")
 
-        palette=palette_make(image_path=image_data, nb_colors=nb_colors)
+        if not image_data or image_data.filename == "":
+            return render_template("colors_images.html", error="No image selected")
+
+        raw = image_data.read()  # <-- on lit UNE fois
+        image_preview = base64.b64encode(raw).decode("utf-8")
+
+        palette = palette_make(BytesIO(raw), nb_colors=nb_colors)
         return render_template('colors_images.html', palette=palette, image_preview=image_preview)
 
     return render_template('colors_images.html')
