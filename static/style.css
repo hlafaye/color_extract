@@ -115,26 +115,28 @@
     padding-right: 10px;
 }
 
-/* toolbar / tabs container */
-.tabs {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    /* <-- le fix principal */
-    align-items: center;
+.toolbar {
+    width: 100%;
 }
 
-/* boutons */
-.tabs .btn {
-    flex: 1 1 140px;
-    /* prend la place et wrap si besoin */
-    min-width: 120px;
+.toolbar>* {
+    max-width: 100%;
 }
 
-/* bonus: mobile */
-@media (max-width: 600px) {
-    .tabs .btn {
-        flex: 1 1 48%;
-        /* 2 par ligne */
+@media (max-width: 576px) {
+    .toolbar .btn {
+        width: 100%;
+        /* boutons full width sur tel */
     }
+
+    .toolbar .d-flex {
+        width: 100%;
+        /* bloc "Colors + input" full width */
+        justify-content: center;
+    }
+
+    #nb-colors {
+        width: 120px !important;
+    }
+}
 }

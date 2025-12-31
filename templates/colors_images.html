@@ -14,9 +14,10 @@
 </head>
 
 <body>
-    <div class="container d-flex justify-content-center">
-        <div class="col-md-6 col-xl-7 text-center mt-5 pt-5">
-      
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-xl-7 text-center">
+
             <h1 class="display-8 fw-semibold mb-4">
                 Extract colors from a picture.
             </h1>
@@ -26,29 +27,26 @@
               
               
         
-        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <!-- <div class="d-grid gap-2 d-sm-flex justify-content-sm-center"> -->
             <form id="upload-form" action="{{ url_for('index') }}" method="post" enctype="multipart/form-data">
             
                 <!-- input file caché -->
                 <input id="file-input" type="file" name="file" accept="image/*" class="d-none">
-                
-            
-            
-                <div class="toolbar">
+                <div class="toolbar d-flex flex-wrap gap-3 justify-content-center align-items-center">
                     <button type="button" id="btn-importer" class="btn btn-primary btn-lg">Import</button>
-                
                     <button type="submit" id="btn-calculer" class="btn btn-outline-secondary btn-lg" disabled>
                         Render
                     </button>
+                    <div class="d-flex align-items-center gap-2">
                 
-                    <div class="toolbar__sep"></div>
-                
-                    <label for="nb-colors" class="toolbar__label">Colors</label>
-                    <input id="nb-colors" name="nb_colors" type="number" min="2" max="12" value="5"
+                        <label for="nb-colors" class="toolbar__label">Colors</label>
+                        <input id="nb-colors" name="nb_colors" type="number" min="2" max="12" value="5"
                         class="form-control form-control-lg toolbar__input" />
+                    </div>
                 </div>
                   
             </form>
+        </div>
     
         </div>
 
